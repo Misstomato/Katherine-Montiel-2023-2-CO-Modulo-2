@@ -5,7 +5,13 @@ class Bird(Obstacle):
     #image is a list
     def __init__(self, image):
         #type is an index
-        self.type = random.randint(0, 2)
+        self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = 280
+        self.rect.y = random.randint(100, 400)
         self.index = 0
+
+    def draw(self, screen):
+        if self.index >= 9:
+            self.index = 0
+        screen.blit(self.image[self.index//5], self.rect)
+        self.index += 1
