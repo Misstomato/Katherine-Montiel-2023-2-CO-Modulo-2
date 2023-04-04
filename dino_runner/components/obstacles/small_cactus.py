@@ -1,5 +1,5 @@
 import random
-from dino_runner.components.obstacle import Obstacle
+from dino_runner.components.obstacles.obstacle import Obstacle
 
 class Small_cactus(Obstacle):
     #image is a list
