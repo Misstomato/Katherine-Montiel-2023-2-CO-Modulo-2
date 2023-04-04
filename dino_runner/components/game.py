@@ -2,6 +2,7 @@ import pygame
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
+from dino_runner.components.dinosaur import Dinosour
 
 class Game:
     def __init__(self):
@@ -16,6 +17,7 @@ class Game:
         self.y_pos_bg = 380
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
+        self.player = Dinosour()
 
     def run(self):
         # Game loop: events - update - draw
