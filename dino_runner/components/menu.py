@@ -11,11 +11,29 @@ class Menu:
         self.font = pygame.font.Font(FONT_STYLE, 30)
         self.text = self.font.render(message, True, (0, 0, 0))
         self.text_rect = self.text.get_rect()
-        self.text_rect.x = self.half_screen_width
-        self.text_rect.y = self.half_screen_height
+        self.text_rect.center = (self.half_screen_width, self.half_screen_height)
 
-    def update(self):
-        pass
+    def update(self, game):
+        self.menu_events_handler(game)
+        pygame.display.update()
 
-    def draw(self):
-        pass
+    def draw(self, screen):
+        #screen.blit(self.text, (100, 200))
+        #screen.blit(self.text, (self.text_rect.x, self.text_rect.y))
+        screen.blit(self.text, self.text_rect)
+
+    def reset_screen_color(self, screen):
+        screen.fill((255, 255, 255))
+
+    def menu_events_handler(self, game):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game.running = False
+                game.playing = False
+            elif event.type == pygame.KEYDOWN:
+                game.run()
+
+    def update_message(self, message):
+        self.text = self.font.render(message, True, (0, 0, 0))
+        self.text_rect = self.text.get_rect()
+        self.text_rect.center = (self.half_screen_width, self.half_screen_height)
