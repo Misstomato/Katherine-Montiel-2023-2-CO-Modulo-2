@@ -69,6 +69,12 @@ BG = pygame.image.load(os.path.join(IMG_DIR, 'Other/Track.png'))
 
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
 
+DEAD = pygame.image.load(os.path.join(IMG_DIR, 'Dino/DinoDead.png'))
+                                      
 DEFAULT_TYPE = "default"
 
 FONT_STYLE = "freesansbold.ttf"
+
+PINK = (215, 132, 208)
+
+BLACK = (0, 0, 0)

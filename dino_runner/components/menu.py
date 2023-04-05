@@ -1,6 +1,6 @@
 import pygame
 
-from dino_runner.utils.constants import FONT_STYLE, SCREEN_WIDTH, SCREEN_HEIGHT
+from dino_runner.utils.constants import FONT_STYLE, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK
 
 class Menu:
     half_screen_width = SCREEN_WIDTH // 2
@@ -8,7 +8,7 @@ class Menu:
 
     def __init__(self, screen, message):
         screen.fill((255, 255, 255))
-        self.font = pygame.font.Font(FONT_STYLE, 30)
+        self.font = pygame.font.Font(FONT_STYLE, 20)
         self.text = self.font.render(message, True, (0, 0, 0))
         self.text_rect = self.text.get_rect()
         self.text_rect.center = (self.half_screen_width, self.half_screen_height)
@@ -37,3 +37,9 @@ class Menu:
         self.text = self.font.render(message, True, (0, 0, 0))
         self.text_rect = self.text.get_rect()
         self.text_rect.center = (self.half_screen_width, self.half_screen_height)
+
+    #def died_labels(self, screen):
+     #   big = pygame.font.SysFont(FONT_STYLE, 20, bold=True)  
+      #  small = pygame.font.SysFont(FONT_STYLE, 10, bold=True)
+       # self.game_over = big.render(f'G A M E  O V E R', 1, (BLACK))
+        #self.play_again = small.render(f'Press R to play again', 1, (BLACK))

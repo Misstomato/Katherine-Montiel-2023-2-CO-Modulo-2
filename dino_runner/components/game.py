@@ -1,13 +1,15 @@
 import pygame
+import random
 
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.menu import Menu
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
-from dino_runner.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
+from dino_runner.components.score import Score
+from dino_runner.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, CLOUD, BLACK, PINK
 
 class Game:
     GAME_SPEED = 20
-    def __init__(self):
+    def __init__(self, high_score=0):
         pygame.init()
         pygame.display.set_caption(TITLE)
         pygame.display.set_icon(ICON)
@@ -15,27 +17,40 @@ class Game:
         self.clock = pygame.time.Clock()
         self.playing = False
         self.game_speed = self.GAME_SPEED
+        self.score = Score(high_score)
+        self.highest_score = 0
         self.x_pos_bg = 0
         self.y_pos_bg = 380
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
         self.menu = Menu(self.screen, "Press any key to start...")
         self.running = False
-        self.score = 0
         self.death_count = 0
+        self.dark_mode = False
+        self.background_color = PINK
+        self.text_color = BLACK
+    
+    def set_dark_mode(self):
+        self.dark_mode = not self.dark_mode
+        if self.dark_mode:
+            self.background_color = BLACK
+            self.text_color = PINK
+        else:
+            self.background_color = PINK
+            self.text_color = BLACK
+        self.score.color = self.text_color
 
     def run(self):
         # Game loop: events - update - draw
         self.playing = True
         self.obstacle_manager.reset_obstacles()
         self.game_speed = self.GAME_SPEED
-        self.score = 0
+        self.score = Score(high_score=self.score.high_score)
         while self.playing:
             self.events()
             self.update()
             self.draw()
         
-
     def execute(self):
         self.running = True
         while self.running:
@@ -48,20 +63,23 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_d:
+                    self.set_dark_mode()
 
     def update(self):
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacle_manager.update(self)
-        self.update_score()
+        self.score.update()
 
     def draw(self):
         self.clock.tick(FPS)
-        self.screen.fill((255, 255, 255))
+        self.screen.fill((self.background_color))
         self.draw_background()
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
-        self.draw_score()
+        self.score.draw(self.screen)
         pygame.display.update()
         pygame.display.flip()
 
@@ -73,6 +91,9 @@ class Game:
             self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
             self.x_pos_bg = 0
         self.x_pos_bg -= self.game_speed
+        cloud_x = self.x_pos_bg // 2 % SCREEN_WIDTH
+        self.screen.blit(CLOUD, (cloud_x, 100))
+        self.screen.blit(CLOUD, (cloud_x - SCREEN_WIDTH, 100))
 
     def show_menu(self):
         self.menu.reset_screen_color(self.screen)
@@ -85,15 +106,3 @@ class Game:
             self.menu.update_message('Dino has died :c')
             self.menu.draw(self.screen)
         self.menu.update(self)
-
-    def update_score(self):
-        self.score += 1
-        if self.score % 100 == 0 and self.game_speed < 500:
-            self.game_speed += 5
-
-    def draw_score(self):
-        font = pygame.font.Font(FONT_STYLE, 30)
-        text = font.render(f'Score: {self.score}', True, (0, 0, 0))
-        text_rect = text.get_rect()
-        text_rect.center = (1000, 50)
-        self.screen.blit(text, text_rect)
