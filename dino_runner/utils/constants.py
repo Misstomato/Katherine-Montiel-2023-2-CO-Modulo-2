@@ -78,6 +78,8 @@ SHIELD_TYPE = "shield"
 
 HAMMER_TYPE = "hammer"
 
+HAMMER_KEY = pygame.K_h
+
 FONT_STYLE = "freesansbold.ttf"
 
 PINK = (215, 132, 208)

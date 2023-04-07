@@ -4,11 +4,11 @@ from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.menu import Menu
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
-from dino_runner.utils.constants import BG, DEFAULT_TYPE, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, CLOUD, DEAD, BLACK, PINK
+from dino_runner.utils.constants import BG, DEFAULT_TYPE, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, CLOUD, HAMMER_KEY, PINK
 
 
 class Game:
-    GAME_SPEED = 20
+    GAME_SPEED = 15
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(TITLE)
@@ -19,7 +19,7 @@ class Game:
         self.game_speed = self.GAME_SPEED
         self.x_pos_bg = 0
         self.y_pos_bg = 380
-        self.player = Dinosaur()
+        self.player = Dinosaur(self)
         self.obstacle_manager = ObstacleManager()
         self.menu = Menu(self.screen)
         self.running = False
@@ -27,16 +27,23 @@ class Game:
         self.death_count = Counter()
         self.highest_score = Counter()
         self.power_up_manager = PowerUpManager()
+        self.hammer_enabled = False
 
     def run(self):
         # Game loop: events - update - draw
-        # Create a restart method -- Part of it on Menu
         self.playing = True
         self.reset_game()
         while self.playing:
             self.events()
             self.update()
             self.draw()
+
+    def reset_game(self):
+        self.obstacle_manager.reset_obstacles()
+        self.score.reset()
+        self.game_speed = self.GAME_SPEED
+        self.player.reset()
+        self.power_up_manager.reset_power_ups()
         
     def execute(self):
         self.running = True
@@ -100,18 +107,11 @@ class Game:
     def update_score(self):
         self.score.update()
         if self.score.count % 100 == 0 and self.game_speed < 500:
-            self.game_speed += 5
+            self.game_speed += 3
 
     def update_highest_score(self):
         if self.score.count > self.highest_score.count:
             self.highest_score.set_count(self.score.count)
-
-    def reset_game(self):
-        self.obstacle_manager.reset_obstacles()
-        self.score.reset()
-        self.game_speed = self.GAME_SPEED
-        self.player.reset()
-        self.power_up_manager.reset_power_ups()
 
     def draw_power_up(self):
         if self.player.has_power_up:
@@ -119,5 +119,6 @@ class Game:
             if time_to_show >= 0:
                 self.menu.draw(self.screen, f'{self.player.type.capitalize()} enabled for {time_to_show} seconds.', 500, 50)
             else:
+                self.power_up_manager.hammer = []
                 self.player.has_power_up = False
                 self.player.type = DEFAULT_TYPE

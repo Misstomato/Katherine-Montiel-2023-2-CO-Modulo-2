@@ -3,7 +3,7 @@ import random
 from dino_runner.components import obstacles
 from dino_runner.components.obstacles.bird import Bird
 from dino_runner.components.obstacles.cactuses import Cactus
-from dino_runner.utils.constants import SHIELD_TYPE, SMALL_CACTUS
+from dino_runner.utils.constants import DEFAULT_TYPE, HAMMER_TYPE
 
 
 class ObstacleManager:
@@ -18,10 +18,13 @@ class ObstacleManager:
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
             if game.player.dino_rect.colliderect(obstacle.rect):
-                if game.player.type != SHIELD_TYPE:
+                if game.player.type == DEFAULT_TYPE:
                     game.playing = False
                     game.death_count.update()
                     break
+                elif game.player.type == HAMMER_TYPE and game.hammer_enabled == True:
+                    self.obstacles.remove(obstacle)
+
                 else: 
                     self.obstacles.remove(obstacle)
 

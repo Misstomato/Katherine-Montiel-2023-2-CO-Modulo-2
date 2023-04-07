@@ -1,5 +1,4 @@
 import pygame
-
 from dino_runner.utils.constants import FONT_STYLE, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, PINK
 
 class Menu:

@@ -1,6 +1,7 @@
 import random
 
-from dino_runner.components.obstacle import Obstacle
+from dino_runner.components.obstacles.obstacle import Obstacle
+
 
 class Cactus(Obstacle):
   # image es una lista!
